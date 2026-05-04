@@ -11,7 +11,7 @@ export default function Logo({
 }) {
   const handleClick = (e) => {
     e.preventDefault()
-    window.history.pushState(null, '', window.location.pathname)
+    window.history.replaceState(null, '', window.location.pathname)
 
     window.scrollTo({
       top: 0,

@@ -21,6 +21,8 @@ export default function ScrollToTopButton() {
   }, [])
 
   const scrollToTop = () => {
+    window.history.replaceState(null, '', window.location.pathname)
+    
     window.scrollTo({
       top: 0,
       behavior: 'smooth',

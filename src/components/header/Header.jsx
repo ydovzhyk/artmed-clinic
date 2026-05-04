@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
 import clsx from 'clsx'
 import { Menu, X, Phone, MessageCircle, MapPin } from 'lucide-react'
 import TopContactBar from './TopContactBar'
@@ -38,7 +37,7 @@ function DesktopNav({ items = [], activeHref }) {
         const isActive = activeHref === item.href
 
         return (
-          <Link
+          <a
             key={item.href}
             href={item.href}
             aria-current={isActive ? 'page' : undefined}
@@ -52,7 +51,7 @@ function DesktopNav({ items = [], activeHref }) {
             <Text as="span" variant="body-sm">
               {item.label}
             </Text>
-          </Link>
+          </a>
         )
       })}
     </nav>
@@ -125,7 +124,7 @@ function MobileMenu({ open, onClose, items = [], languageSlot, activeHref }) {
               const isActive = activeHref === item.href
 
               return (
-                <Link
+                <a
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
@@ -140,7 +139,7 @@ function MobileMenu({ open, onClose, items = [], languageSlot, activeHref }) {
                   <Text as="span" variant="body-sm">
                     {item.label}
                   </Text>
-                </Link>
+                </a>
               )
             })}
           </nav>
