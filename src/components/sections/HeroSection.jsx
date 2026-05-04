@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { CalendarCheck, ShieldCheck } from 'lucide-react'
 import Text from '@/components/shared/text/Text'
 import Button from '@/components/shared/button/Button'
-import Logo from '@/components/shared/logo/Logo'
 
 const phoneHref = 'tel:+34652921177'
 
@@ -26,6 +25,8 @@ export default function HeroSection() {
           alt="ARTMED Clinic"
           fill
           priority
+          fetchPriority="high"
+          sizes="100vw"
           className="object-cover object-center"
         />
 

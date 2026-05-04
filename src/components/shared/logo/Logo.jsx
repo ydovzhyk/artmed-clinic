@@ -26,7 +26,7 @@ export default function Logo({
       className={clsx('group inline-flex items-center', className)}
     >
       <Image
-        src="/images/logo.png"
+        src="/images/logo.webp"
         alt="Логотип клиники"
         width={256}
         height={89}
