@@ -21,7 +21,7 @@ function FooterContact({ href, icon: Icon, children, external = false }) {
       href={href}
       target={external ? '_blank' : undefined}
       rel={external ? 'noreferrer' : undefined}
-      className="flex items-center gap-2 text-sm font-medium text-foreground-soft transition hover:text-primary"
+      className="flex min-h-11 items-center gap-2 rounded-xl py-2 text-sm font-medium text-foreground-soft transition hover:text-primary lg:min-h-0 lg:py-0"
     >
       <Icon size={16} className="shrink-0 text-primary" />
       <span className="min-w-0 break-words">{children}</span>
@@ -62,23 +62,34 @@ export default function Footer() {
               {tNavigation}
             </Text>
 
-            <ul className="space-y-2.5">
+            <ul className="space-y-1 lg:space-y-2.5">
               <li>
-                <a href="#services" className="footer-link">
+                <a
+                  href="#services"
+                  className="footer-link inline-flex min-h-11 items-center rounded-xl py-2 lg:min-h-0 lg:py-0"
+                >
                   <Text as="span" variant="body-sm">
                     Услуги
                   </Text>
                 </a>
               </li>
+
               <li>
-                <a href="#advantages" className="footer-link">
+                <a
+                  href="#advantages"
+                  className="footer-link inline-flex min-h-11 items-center rounded-xl py-2 lg:min-h-0 lg:py-0"
+                >
                   <Text as="span" variant="body-sm">
                     Преимущества
                   </Text>
                 </a>
               </li>
+
               <li>
-                <a href="#contacts" className="footer-link">
+                <a
+                  href="#contacts"
+                  className="footer-link inline-flex min-h-11 items-center rounded-xl py-2 lg:min-h-0 lg:py-0"
+                >
                   <Text as="span" variant="body-sm">
                     Контакты
                   </Text>

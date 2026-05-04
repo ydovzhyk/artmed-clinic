@@ -74,7 +74,7 @@ export default function AdvantagesSection() {
           </div>
 
           <div className="mb-4 flex flex-row items-end gap-2">
-            <Text as="span" translate>
+            <Text as="h2" translate>
               Стандарты работы
             </Text>
 

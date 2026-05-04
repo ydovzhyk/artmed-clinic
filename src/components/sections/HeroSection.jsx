@@ -35,7 +35,6 @@ export default function HeroSection() {
 
       <div className="container-app relative flex h-[calc(100svh_-_var(--header-initial-height,_112px))] min-h-[560px] items-center py-10 md:py-12 lg:min-h-0">
         <div className="max-w-[680px]">
-
           <Text
             as="h1"
             translate={false}
@@ -84,21 +83,24 @@ export default function HeroSection() {
             </a>
           </div>
 
-          <div className="mt-8 hidden grid-cols-3 gap-3 md:grid">
+          <div className="mx-auto mt-8 grid w-full max-w-sm grid-cols-1 gap-2 md:mx-0 md:max-w-none md:grid-cols-3 md:gap-3">
             {benefits.map((item) => (
               <div
                 key={item}
-                className="flex items-center gap-2 rounded-2xl border border-background-border bg-white/72 px-4 py-3 shadow-[0_10px_28px_rgba(16,36,50,0.06)] backdrop-blur"
+                className="flex h-10 items-center gap-2 rounded-2xl border border-background-border bg-white/72 px-3 shadow-[0_10px_28px_rgba(16,36,50,0.06)] backdrop-blur md:h-auto md:px-4 md:py-3"
               >
-                <div className="flex h-8 w-8 items-center justify-center">
-                  <ShieldCheck size={18} className="text-brand-blue" />
+                <div className="flex h-6 w-6 items-center justify-center md:h-8 md:w-8">
+                  <ShieldCheck
+                    size={16}
+                    className="text-brand-blue md:size-[18px]"
+                  />
                 </div>
 
                 <Text
                   as="p"
                   variant="caption"
                   color="soft"
-                  className="font-bold"
+                  className="font-bold leading-none"
                 >
                   {item}
                 </Text>

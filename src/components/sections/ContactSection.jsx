@@ -78,7 +78,7 @@ export default function ContactSection() {
           </div>
 
           <div className="flex flex-row gap-2 items-end mb-4">
-            <Text as="span" translate={true}>
+            <Text as="h2" translate={true}>
               Свяжитесь с нами
             </Text>
             <Text
