@@ -46,12 +46,32 @@ export default function ClinicMap({
   className = '',
 }) {
   const [isFullScreen, setIsFullScreen] = useState(false)
+  const [isMapLoaded, setIsMapLoaded] = useState(false)
   const [weatherData, setWeatherData] = useState(null)
 
   const mapSrc = useMemo(() => {
     const query = encodeURIComponent(address)
     return `https://maps.google.com/maps?q=${query}&z=16&output=embed&t=m`
   }, [address])
+
+  useEffect(() => {
+    if (isMapLoaded) return
+
+    const handleScroll = () => {
+      if (window.scrollY >= 100) {
+        setIsMapLoaded(true)
+        window.removeEventListener('scroll', handleScroll)
+      }
+    }
+
+    handleScroll()
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [isMapLoaded])
 
   useEffect(() => {
     const savedWeather = readWeatherFromStorage(id)
@@ -122,18 +142,25 @@ export default function ClinicMap({
 
   const mapContent = (
     <>
-      <iframe
-        title="ARTMED Clinic Google Maps"
-        src={mapSrc}
-        className="absolute inset-0 h-full w-full border-0"
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        allowFullScreen
-      />
+      {isMapLoaded ? (
+        <iframe
+          title="ARTMED Clinic Google Maps"
+          src={mapSrc}
+          className="absolute inset-0 h-full w-full border-0"
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          allowFullScreen
+        />
+      ) : (
+        <div className="absolute inset-0 bg-background-soft" />
+      )}
 
       <button
         type="button"
-        onClick={() => setIsFullScreen((prev) => !prev)}
+        onClick={() => {
+          setIsMapLoaded(true)
+          setIsFullScreen((prev) => !prev)
+        }}
         aria-label={
           isFullScreen
             ? 'Закрыть карту на весь экран'
@@ -145,7 +172,7 @@ export default function ClinicMap({
       </button>
 
       {weatherData?.icon ? (
-        <div className="absolute bottom-2 left-2 z-10 flex flex-col items-center w-[170px] border border-background-border bg-white/95 px-2 py-2 shadow-[0_8px_22px_rgba(16,36,50,0.12)]">
+        <div className="absolute bottom-2 left-2 z-10 flex w-[170px] flex-col items-center border border-background-border bg-white/95 px-2 py-2 shadow-[0_8px_22px_rgba(16,36,50,0.12)]">
           <Text
             as="p"
             variant="caption"
@@ -155,7 +182,7 @@ export default function ClinicMap({
             Погода в {weatherData.city}
           </Text>
 
-          <div className="flex items-center my-[-8px]">
+          <div className="my-[-8px] flex items-center">
             <Image
               src={weatherData.icon}
               alt="Weather icon"
@@ -181,7 +208,7 @@ export default function ClinicMap({
               as="p"
               variant="caption"
               caseMode="sentence"
-              className="text-[13px] font-thin leading-4 text-center"
+              className="text-center text-[13px] font-thin leading-4"
             >
               {weatherData.description}
             </Text>
