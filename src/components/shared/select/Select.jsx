@@ -26,6 +26,7 @@ function DropdownIndicator(props) {
 export default function Select({
   id,
   label,
+  hideLabel = false,
   error,
   hint,
   className,
@@ -212,7 +213,9 @@ export default function Select({
         <label
           htmlFor={id}
           className={clsx(
-            'mb-2 block text-sm font-semibold text-foreground-soft',
+            hideLabel
+              ? 'sr-only'
+              : 'mb-2 block text-sm font-semibold text-foreground-soft',
             labelClassName,
           )}
         >

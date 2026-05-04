@@ -60,6 +60,7 @@ export default function TranslateMe() {
     <div className="lang-select">
       <Select
         id="language-select"
+        hideLabel={true}
         className="w-[110px] h-[40px]"
         classNamePrefix="langrs"
         options={options}
