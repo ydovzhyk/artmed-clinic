@@ -1,5 +1,7 @@
 'use client'
 
+import { useCallback } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import { Phone, Mail, MapPin, MessageCircle } from 'lucide-react'
 import Text from '@/components/shared/text/Text'
 import Logo from '@/components/shared/logo/Logo'
@@ -30,6 +32,39 @@ function FooterContact({ href, icon: Icon, children, external = false }) {
 }
 
 export default function Footer() {
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const handleFooterNavClick = useCallback(
+    (e, href) => {
+      if (!href.startsWith('#')) return
+
+      e.preventDefault()
+
+      const id = href.replace('#', '')
+
+      if (!id) return
+
+      if (pathname === '/') {
+        const section = document.getElementById(id)
+
+        if (!section) return
+
+        window.history.replaceState(null, '', href)
+
+        section.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+
+        return
+      }
+
+      router.push(`/${href}`)
+    },
+    [pathname, router],
+  )
+
   const tDescription = useTranslate(
     'Современная медицина, забота и индивидуальный подход в Испании.',
   )
@@ -66,6 +101,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#services"
+                  onClick={(e) => handleFooterNavClick(e, '#services')}
                   className="footer-link inline-flex min-h-11 items-center rounded-xl py-2 lg:min-h-0 lg:py-0"
                 >
                   <Text as="span" variant="body-sm">
@@ -77,6 +113,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#advantages"
+                  onClick={(e) => handleFooterNavClick(e, '#advantages')}
                   className="footer-link inline-flex min-h-11 items-center rounded-xl py-2 lg:min-h-0 lg:py-0"
                 >
                   <Text as="span" variant="body-sm">
@@ -88,6 +125,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#contacts"
+                  onClick={(e) => handleFooterNavClick(e, '#contacts')}
                   className="footer-link inline-flex min-h-11 items-center rounded-xl py-2 lg:min-h-0 lg:py-0"
                 >
                   <Text as="span" variant="body-sm">

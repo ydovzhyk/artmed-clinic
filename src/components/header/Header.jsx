@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import clsx from 'clsx'
 import { Menu, X, Phone, MessageCircle, MapPin } from 'lucide-react'
 import TopContactBar from './TopContactBar'
@@ -25,7 +26,7 @@ function BurgerButton({ open, onClick }) {
   )
 }
 
-function DesktopNav({ items = [], activeHref }) {
+function DesktopNav({ items = [], activeHref, onNavigate }) {
   const tNavigation = useTranslate('Основная навигация')
 
   return (
@@ -40,6 +41,7 @@ function DesktopNav({ items = [], activeHref }) {
           <a
             key={item.href}
             href={item.href}
+            onClick={(e) => onNavigate?.(e, item)}
             aria-current={isActive ? 'page' : undefined}
             className={clsx(
               'rounded-full px-3 py-2 text-sm font-bold transition xl:px-4',
@@ -58,7 +60,14 @@ function DesktopNav({ items = [], activeHref }) {
   )
 }
 
-function MobileMenu({ open, onClose, items = [], languageSlot, activeHref }) {
+function MobileMenu({
+  open,
+  onClose,
+  items = [],
+  languageSlot,
+  activeHref,
+  onNavigate,
+}) {
   const tCloseMenu = useTranslate('Закрыть меню')
   const tMobileNavigation = useTranslate('Мобильная навигация')
   const tPhoneTitle = useTranslate('Позвонить в клинику')
@@ -102,7 +111,6 @@ function MobileMenu({ open, onClose, items = [], languageSlot, activeHref }) {
             >
               ARTMED
             </Text>
-
             <Text as="p" variant="caption" color="muted">
               Медицинский центр
             </Text>
@@ -127,7 +135,10 @@ function MobileMenu({ open, onClose, items = [], languageSlot, activeHref }) {
                 <a
                   key={item.href}
                   href={item.href}
-                  onClick={onClose}
+                  onClick={(e) => {
+                    onNavigate?.(e, item)
+                    onClose()
+                  }}
                   aria-current={isActive ? 'page' : undefined}
                   className={clsx(
                     'rounded-2xl border px-4 py-3 text-base font-bold transition hover:border-secondary/50 hover:bg-secondary-soft hover:text-primary',
@@ -192,7 +203,6 @@ function MobileMenu({ open, onClose, items = [], languageSlot, activeHref }) {
               >
                 Язык
               </Text>
-
               {languageSlot}
             </div>
           )}
@@ -219,8 +229,43 @@ export default function Header({
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeHref, setActiveHref] = useState('')
 
+  const router = useRouter()
+  const pathname = usePathname()
+
   const tPhoneTitle = useTranslate('Позвонить в клинику')
   const headerRef = useRef(null)
+
+  const handleSectionNavigation = useCallback(
+    (e, item) => {
+      const href = item?.href || ''
+
+      if (!href.startsWith('#')) return
+
+      e.preventDefault()
+
+      const id = href.replace('#', '')
+
+      if (!id) return
+
+      if (pathname === '/') {
+        const section = document.getElementById(id)
+
+        if (!section) return
+
+        window.history.replaceState(null, '', href)
+
+        section.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+
+        return
+      }
+
+      router.push(`/${href}`)
+    },
+    [pathname, router],
+  )
 
   useEffect(() => {
     if (!headerRef.current) return
@@ -243,6 +288,11 @@ export default function Header({
   }, [])
 
   useEffect(() => {
+    if (pathname !== '/') {
+      setActiveHref('')
+      return
+    }
+
     const sectionItems = navItems
       .filter((item) => item.href?.startsWith('#'))
       .map((item) => ({
@@ -280,7 +330,7 @@ export default function Header({
       window.removeEventListener('scroll', updateActiveSection)
       window.removeEventListener('resize', updateActiveSection)
     }
-  }, [navItems])
+  }, [navItems, pathname])
 
   return (
     <>
@@ -304,7 +354,11 @@ export default function Header({
             <div className="container-app flex min-h-[72px] items-center justify-between gap-4 py-1">
               <div className="flex min-w-0 items-center">{logo}</div>
 
-              <DesktopNav items={navItems} activeHref={activeHref} />
+              <DesktopNav
+                items={navItems}
+                activeHref={activeHref}
+                onNavigate={handleSectionNavigation}
+              />
 
               <div className="hidden items-center gap-2 lg:flex xl:gap-2">
                 {languageSlot && (
@@ -347,6 +401,7 @@ export default function Header({
         items={navItems}
         languageSlot={languageSlot}
         activeHref={activeHref}
+        onNavigate={handleSectionNavigation}
       />
     </>
   )
